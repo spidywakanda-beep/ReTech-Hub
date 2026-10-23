@@ -302,9 +302,9 @@ export const SmartphoneCatalog: React.FC = () => {
                   key={phone.id}
                   className="rounded-2xl bg-white border border-slate-200/90 hover:border-slate-300 transition-all flex flex-col justify-between overflow-hidden shadow-2xs hover:shadow-xs group"
                 >
-                  {/* Card Header & Device Visual */}
-                  <div className="h-56 w-full bg-gradient-to-b from-slate-50 to-slate-100/70 border-b border-slate-100 relative flex items-center justify-center p-3 overflow-hidden">
-                    <PhoneDeviceVisual phone={phone} mode="card" view="dual" />
+                  {/* Card Header & Authentic Handset Visual (Cashify Reference) */}
+                  <div className="h-64 sm:h-72 w-full bg-white border-b border-slate-100 relative flex items-center justify-center p-4 overflow-hidden group-hover:bg-slate-50/50 transition-colors">
+                    <PhoneDeviceVisual phone={phone} mode="card" view="front" />
                     
                     {/* Brand & Series Header (Clean unboxed text) */}
                     <div className="absolute top-3 left-3 text-[11px] font-mono text-slate-600 bg-white/95 backdrop-blur-xs px-2 py-0.5 rounded border border-slate-200/90 shadow-2xs z-10">
