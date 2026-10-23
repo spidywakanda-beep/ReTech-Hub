@@ -1,0 +1,6 @@
+{
+  "name": "ReTech Hub – Certified Pre-Owned Tech & Repairs",
+  "description": "Buy Smart. Sell Smart. Verified pre-owned smartphones, certified laptops, premium accessories, and transparent repair diagnostics in Bengaluru, India.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
