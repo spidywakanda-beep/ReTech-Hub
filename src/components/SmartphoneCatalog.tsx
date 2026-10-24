@@ -302,7 +302,7 @@ export const SmartphoneCatalog: React.FC = () => {
                   key={phone.id}
                   className="rounded-2xl bg-white border border-slate-200/90 hover:border-slate-300 transition-all flex flex-col justify-between overflow-hidden shadow-2xs hover:shadow-xs group"
                 >
-                  {/* Card Header & Authentic Handset Visual (Cashify Reference) */}
+                  {/* Card Header & Authentic Handset Visual (ReTech Hub Certified Reference) */}
                   <div className="h-64 sm:h-72 w-full bg-white border-b border-slate-100 relative flex items-center justify-center p-4 overflow-hidden group-hover:bg-slate-50/50 transition-colors">
                     <PhoneDeviceVisual phone={phone} mode="card" view="front" />
                     

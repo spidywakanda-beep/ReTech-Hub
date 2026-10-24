@@ -75,14 +75,14 @@ export const LaptopDeviceVisual: React.FC<LaptopDeviceVisualProps> = ({
   return (
     <div className={`relative flex items-center justify-center select-none w-full ${containerHeight} ${className}`}>
       
-      {/* 1. AUTHENTIC PHOTOGRAPHIC OPEN LAPTOP CUTOUT (Cashify Refurbished Reference) */}
+      {/* 1. AUTHENTIC PHOTOGRAPHIC OPEN LAPTOP CUTOUT (ReTech Hub Certified Reference) */}
       {!imageFailed && laptop.imageUrl ? (
         <div className="relative w-full h-full flex items-center justify-center p-2">
           <img
             src={laptop.imageUrl}
             alt={laptop.name}
             loading="lazy"
-            crossOrigin="anonymous"
+            referrerPolicy="no-referrer"
             onError={() => setImageFailed(true)}
             className="max-h-full max-w-full object-contain filter drop-shadow-[0_12px_20px_rgba(0,0,0,0.18)] transition-transform duration-300 group-hover:scale-105"
           />

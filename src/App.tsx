@@ -6,9 +6,9 @@
 import React from 'react';
 import { Navbar } from './components/Navbar';
 import { Hero } from './components/Hero';
-import { SmartphoneCatalog } from './components/SmartphoneCatalog';
-import { DeviceShowcase } from './components/DeviceShowcase';
+import { UpperDeviceSelector } from './components/UpperDeviceSelector';
 import { RepairEstimator } from './components/RepairEstimator';
+import { DisplayGlassCatalog } from './components/DisplayGlassCatalog';
 import { AccessoriesShowcase } from './components/AccessoriesShowcase';
 import { WhyChooseUs } from './components/WhyChooseUs';
 import { HowItWorks } from './components/HowItWorks';
@@ -33,16 +33,16 @@ export default function App() {
         {/* Hero Section */}
         <Hero />
 
-        {/* Section 1: Minimalist Used Smartphone Discovery Catalog */}
-        <SmartphoneCatalog />
-
-        {/* Section 2: Certified Pre-Owned Laptops */}
-        <DeviceShowcase />
+        {/* Upper Toggle & Cascading Dropdown Selector (Clean Startup Flow - No Wall of Devices) */}
+        <UpperDeviceSelector />
 
         {/* Section 3: Mobile & Laptop Repairs + Instant Estimator */}
         <RepairEstimator />
 
-        {/* Section 4: Engineered Tech Accessories */}
+        {/* Section 4: Smartphone Glass Replacement & Display Repair Catalog */}
+        <DisplayGlassCatalog />
+
+        {/* Section 5: Engineered Tech Accessories */}
         <AccessoriesShowcase />
 
         {/* Section 5: Why Choose ReTech Hub (40-Point Standards & Owner Sanfi) */}

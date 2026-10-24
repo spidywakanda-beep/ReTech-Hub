@@ -6,10 +6,11 @@ import { LaptopDetailModal } from './LaptopDetailModal';
 import { LaptopCompareModal } from './LaptopCompareModal';
 
 export const DeviceShowcase: React.FC = () => {
-  const [selectedBrands, setSelectedBrands] = useState<string[]>(['dell']);
+  const [selectedBrands, setSelectedBrands] = useState<string[]>([]);
+  const [selectedSeries, setSelectedSeries] = useState<string>('all');
   const [availabilityFilter, setAvailabilityFilter] = useState<'all' | 'in_stock'>('in_stock');
   const [selectedPurpose, setSelectedPurpose] = useState<string>('all');
-  const [priceRangeMax, setPriceRangeMax] = useState<number>(100000);
+  const [priceRangeMax, setPriceRangeMax] = useState<number>(120000);
   const [sortBy, setSortBy] = useState<'featured' | 'price_low' | 'price_high' | 'discount'>('featured');
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [activeLaptop, setActiveLaptop] = useState<LaptopModel | null>(null);
@@ -25,11 +26,7 @@ export const DeviceShowcase: React.FC = () => {
   // Toggle brand checkbox
   const toggleBrand = (brandKey: string) => {
     if (selectedBrands.includes(brandKey)) {
-      if (selectedBrands.length === 1) {
-        setSelectedBrands([]); // deselect all
-      } else {
-        setSelectedBrands(selectedBrands.filter((b) => b !== brandKey));
-      }
+      setSelectedBrands(selectedBrands.filter((b) => b !== brandKey));
     } else {
       setSelectedBrands([...selectedBrands, brandKey]);
     }
@@ -37,8 +34,9 @@ export const DeviceShowcase: React.FC = () => {
 
   const clearAllFilters = () => {
     setSelectedBrands([]);
+    setSelectedSeries('all');
     setSelectedPurpose('all');
-    setPriceRangeMax(100000);
+    setPriceRangeMax(120000);
     setSearchQuery('');
     setSortBy('featured');
   };
@@ -48,6 +46,10 @@ export const DeviceShowcase: React.FC = () => {
     let result = LAPTOP_CATALOG.filter((laptop) => {
       // Brand filter (if brands selected)
       if (selectedBrands.length > 0 && !selectedBrands.includes(laptop.brandKey)) {
+        return false;
+      }
+      // Series filter
+      if (selectedSeries !== 'all' && laptop.series.toLowerCase() !== selectedSeries.toLowerCase()) {
         return false;
       }
       // Price range filter
@@ -85,7 +87,41 @@ export const DeviceShowcase: React.FC = () => {
     }
 
     return result;
-  }, [selectedBrands, priceRangeMax, selectedPurpose, searchQuery, sortBy]);
+  }, [selectedBrands, selectedSeries, priceRangeMax, selectedPurpose, searchQuery, sortBy]);
+
+  // Compute dynamic brand counts
+  const brandList = useMemo(() => {
+    const counts: Record<string, number> = {
+      dell: 0,
+      apple: 0,
+      lenovo: 0,
+      hp: 0,
+      asus: 0
+    };
+    LAPTOP_CATALOG.forEach((l) => {
+      if (counts[l.brandKey] !== undefined) {
+        counts[l.brandKey]++;
+      }
+    });
+
+    return [
+      { key: 'dell', name: 'Dell (Inspiron, XPS, Latitude)', count: counts.dell },
+      { key: 'apple', name: 'Apple MacBook (Air & Pro)', count: counts.apple },
+      { key: 'lenovo', name: 'Lenovo (ThinkPad, IdeaPad, Yoga)', count: counts.lenovo },
+      { key: 'hp', name: 'HP (EliteBook, Pavilion, Envy)', count: counts.hp },
+      { key: 'asus', name: 'ASUS (VivoBook & Zenbook)', count: counts.asus },
+    ];
+  }, []);
+
+  // Compute available series based on selected brand
+  const availableSeriesList = useMemo(() => {
+    let pool = LAPTOP_CATALOG;
+    if (selectedBrands.length > 0) {
+      pool = pool.filter((l) => selectedBrands.includes(l.brandKey));
+    }
+    const seriesSet = Array.from(new Set(pool.map((l) => l.series)));
+    return ['all', ...seriesSet];
+  }, [selectedBrands]);
 
   const toggleCompare = (laptop: LaptopModel) => {
     if (compareList.some((l) => l.id === laptop.id)) {
@@ -123,7 +159,7 @@ export const DeviceShowcase: React.FC = () => {
               Buy Refurbished Laptops
             </h2>
             <p className="text-sm sm:text-base text-slate-600 mt-2 max-w-2xl leading-relaxed">
-              Explore authentic Dell Latitude, Apple MacBook, Lenovo ThinkPad, and HP EliteBook models. Tested on 40 laboratory inspection checkpoints at our Bengaluru facility.
+              Explore authentic Dell (Inspiron, XPS, Latitude), Apple (MacBook Air, MacBook Pro), Lenovo (ThinkPad, IdeaPad, Yoga), HP (Pavilion, Envy, EliteBook), and ASUS (VivoBook, Zenbook) models. Tested on 40 laboratory inspection checkpoints at our Bengaluru facility.
             </p>
           </div>
 
@@ -132,11 +168,11 @@ export const DeviceShowcase: React.FC = () => {
           </div>
         </div>
 
-        {/* Cashify Refurbished Layout: Left Sidebar + Right Product Feed */}
+        {/* ReTech Hub Refurbished Layout: Left Sidebar + Right Product Feed */}
         <div className="flex flex-col lg:flex-row items-start gap-8 mt-6">
           
           {/* ========================================================= */}
-          {/* LEFT SIDEBAR: FILTERS (Direct Cashify Reference Screenshot) */}
+          {/* LEFT SIDEBAR: FILTERS */}
           {/* ========================================================= */}
           <aside className="w-full lg:w-72 shrink-0 bg-white border border-slate-200/90 rounded-2xl p-5 shadow-2xs space-y-6">
             
@@ -238,12 +274,7 @@ export const DeviceShowcase: React.FC = () => {
 
               {isBrandOpen && (
                 <div className="mt-3 space-y-2.5 text-xs text-slate-700">
-                  {[
-                    { key: 'dell', name: 'Dell Latitude / XPS', count: 3 },
-                    { key: 'apple', name: 'Apple MacBook', count: 3 },
-                    { key: 'lenovo', name: 'Lenovo ThinkPad', count: 2 },
-                    { key: 'hp', name: 'HP EliteBook', count: 1 },
-                  ].map((b) => (
+                  {brandList.map((b) => (
                     <label key={b.key} className="flex items-center justify-between cursor-pointer select-none">
                       <div className="flex items-center gap-2.5">
                         <input
@@ -279,7 +310,7 @@ export const DeviceShowcase: React.FC = () => {
                   <input
                     type="range"
                     min={25000}
-                    max={100000}
+                    max={150000}
                     step={2500}
                     value={priceRangeMax}
                     onChange={(e) => setPriceRangeMax(Number(e.target.value))}
@@ -300,7 +331,7 @@ export const DeviceShowcase: React.FC = () => {
           {/* ========================================================= */}
           <div className="flex-1 w-full space-y-5">
             
-            {/* Top Bar: Breadcrumb Navigation & Sort Bar (Cashify Style) */}
+            {/* Top Bar: Breadcrumb Navigation & Sort Bar */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded-xl bg-white border border-slate-200/90 shadow-2xs">
               
               {/* Breadcrumbs */}
@@ -338,6 +369,30 @@ export const DeviceShowcase: React.FC = () => {
                 </select>
               </div>
 
+            </div>
+
+            {/* Series Filter Quick Pills */}
+            <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none">
+              <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider shrink-0 mr-1">
+                Series:
+              </span>
+              {availableSeriesList.map((series) => {
+                const isSelected = selectedSeries.toLowerCase() === series.toLowerCase();
+                return (
+                  <button
+                    key={series}
+                    type="button"
+                    onClick={() => setSelectedSeries(series)}
+                    className={`px-3 py-1 rounded-lg text-xs font-medium whitespace-nowrap transition-colors ${
+                      isSelected
+                        ? 'bg-orange-600 text-white font-semibold shadow-2xs'
+                        : 'bg-white text-slate-700 border border-slate-200 hover:bg-slate-50'
+                    }`}
+                  >
+                    {series === 'all' ? 'All Series' : series}
+                  </button>
+                );
+              })}
             </div>
 
             {/* Results Count & Search Bar */}
@@ -391,16 +446,16 @@ export const DeviceShowcase: React.FC = () => {
                       key={laptop.id}
                       className="rounded-2xl bg-white border border-slate-200/90 hover:border-slate-300 transition-all overflow-hidden shadow-2xs hover:shadow-xs group flex flex-col md:flex-row"
                     >
-                      {/* Left Column: Authentic Open Laptop Photo (Cashify Reference) */}
+                      {/* Left Column: Authentic Open Laptop Photo */}
                       <div className="w-full md:w-72 lg:w-80 bg-white border-b md:border-b-0 md:border-r border-slate-100 p-5 relative flex items-center justify-center shrink-0">
                         
-                        {/* Top Left: CASHIFY / RETECH ASSURED Seal */}
+                        {/* Top Left: RETECH ASSURED Seal */}
                         <div className="absolute top-3.5 left-3.5 flex items-center gap-1.5 px-2 py-0.5 rounded bg-teal-50 border border-teal-200 text-teal-800 text-[10px] font-mono font-bold z-10 shadow-2xs">
                           <ShieldCheck className="w-3.5 h-3.5 text-teal-600" />
                           <span>RETECH ASSURED</span>
                         </div>
 
-                        {/* Top Right: Savings Tag (Cashify Green Tag) */}
+                        {/* Top Right: Savings Tag */}
                         <div className="absolute top-3.5 right-3.5 px-2.5 py-0.5 rounded bg-emerald-50 border border-emerald-300 text-emerald-800 text-[10px] font-mono font-bold z-10 shadow-2xs">
                           ₹{savingsInr.toLocaleString('en-IN')} OFF
                         </div>
@@ -420,7 +475,7 @@ export const DeviceShowcase: React.FC = () => {
                             {laptop.name} - Refurbished
                           </h3>
 
-                          {/* Cashify Badges: Lowest Price & Rating */}
+                          {/* Badges: Lowest Price & Rating */}
                           <div className="flex items-center gap-2 mt-2">
                             <span className="px-2.5 py-0.5 rounded bg-[#1e2e5c] text-white text-[10px] font-bold tracking-wide uppercase">
                               Lowest Price
@@ -434,7 +489,7 @@ export const DeviceShowcase: React.FC = () => {
                             </span>
                           </div>
 
-                          {/* Cashify Price Row */}
+                          {/* Price Row */}
                           <div className="mt-3 flex items-baseline gap-2">
                             <span className="text-sm font-bold text-red-600 font-mono">
                               -{laptop.discountPercent}%
@@ -452,7 +507,7 @@ export const DeviceShowcase: React.FC = () => {
                             ₹{monthlyBenchmark.toLocaleString('en-IN')}/month Indicative Benchmark · No Cost Verification
                           </div>
 
-                          {/* Cashify Purpose Chips (Gray rounded pills with icons) */}
+                          {/* Purpose Chips (Gray rounded pills with icons) */}
                           <div className="flex flex-wrap gap-2 mt-3 pt-3 border-t border-slate-100">
                             {laptop.purposeTags.map((tag, idx) => (
                               <span

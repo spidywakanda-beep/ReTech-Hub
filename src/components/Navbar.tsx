@@ -20,22 +20,23 @@ export const Navbar: React.FC = () => {
         {/* Zone 2: 4–5 clean single-line text navigation links */}
         <nav className="hidden md:flex items-center gap-7 text-sm font-medium text-slate-600">
           <a 
-            href="#smartphones" 
+            href="#device-selector" 
             className="hover:text-slate-900 hover:underline underline-offset-4 decoration-orange-500 transition-colors whitespace-nowrap shrink-0"
           >
-            Smartphones
-          </a>
-          <a 
-            href="#laptops" 
-            className="hover:text-slate-900 hover:underline underline-offset-4 decoration-orange-500 transition-colors whitespace-nowrap shrink-0"
-          >
-            Laptops
+            Trade-In & Valuation
           </a>
           <a 
             href="#repairs" 
             className="hover:text-slate-900 hover:underline underline-offset-4 decoration-orange-500 transition-colors whitespace-nowrap shrink-0"
           >
             Repairs
+          </a>
+          <a 
+            href="#display-catalog" 
+            className="hover:text-slate-900 hover:underline underline-offset-4 decoration-orange-500 transition-colors whitespace-nowrap shrink-0 flex items-center gap-1"
+          >
+            <span>Display & Glass Catalog</span>
+            <span className="text-[10px] font-bold px-1.5 py-0.2 rounded bg-orange-100 text-orange-700">New</span>
           </a>
           <a 
             href="#accessories" 
@@ -84,18 +85,11 @@ export const Navbar: React.FC = () => {
       {mobileMenuOpen && (
         <div className="md:hidden border-b border-slate-200 bg-white px-4 pt-3 pb-5 space-y-2">
           <a
-            href="#smartphones"
+            href="#device-selector"
             onClick={() => setMobileMenuOpen(false)}
             className="block px-3 py-2 rounded-md text-sm font-medium text-slate-700 hover:text-slate-900 hover:bg-slate-50"
           >
-            Smartphones Catalog
-          </a>
-          <a
-            href="#laptops"
-            onClick={() => setMobileMenuOpen(false)}
-            className="block px-3 py-2 rounded-md text-sm font-medium text-slate-700 hover:text-slate-900 hover:bg-slate-50"
-          >
-            Certified Laptops
+            Trade-In & Valuation
           </a>
           <a
             href="#repairs"
@@ -103,6 +97,14 @@ export const Navbar: React.FC = () => {
             className="block px-3 py-2 rounded-md text-sm font-medium text-slate-700 hover:text-slate-900 hover:bg-slate-50"
           >
             Mobile & Laptop Repairs
+          </a>
+          <a
+            href="#display-catalog"
+            onClick={() => setMobileMenuOpen(false)}
+            className="block px-3 py-2 rounded-md text-sm font-medium text-slate-700 hover:text-slate-900 hover:bg-slate-50 flex items-center justify-between"
+          >
+            <span>Display & Glass Catalog</span>
+            <span className="text-[10px] font-bold px-1.5 py-0.2 rounded bg-orange-100 text-orange-700">New</span>
           </a>
           <a
             href="#accessories"
