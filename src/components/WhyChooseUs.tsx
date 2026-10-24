@@ -62,14 +62,14 @@ export const WhyChooseUs: React.FC = () => {
             <div className="flex items-center gap-2 text-xs font-mono text-orange-600 uppercase tracking-wider font-semibold">
               <span>Owner's Operational Commitment</span>
               <span aria-hidden="true" className="text-slate-300">·</span>
-              <span className="text-slate-700">Sanfi, Founder & Operator</span>
+              <span className="text-slate-700">Stevee, Founder & Operator</span>
             </div>
             <p className="text-sm text-slate-700 leading-relaxed italic">
               "At ReTech Hub, our philosophy is simple: test every circuit with integrity, never recommend unnecessary part replacements, and give every customer in Bengaluru the certainty of hands-on device testing before buying or leaving a repair."
             </p>
           </div>
           <div className="shrink-0 text-left sm:text-right font-mono text-xs">
-            <div className="text-slate-900 font-bold text-sm">Sanfi</div>
+            <div className="text-slate-900 font-bold text-sm">Stevee</div>
             <div className="text-slate-500 text-[11px]">ReTech Hub · Bengaluru, India</div>
           </div>
         </div>

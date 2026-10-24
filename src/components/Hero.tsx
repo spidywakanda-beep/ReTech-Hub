@@ -13,7 +13,7 @@ export const Hero: React.FC = () => {
           <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-slate-500">
             <span className="text-orange-600 font-semibold">Bengaluru, India</span>
             <span aria-hidden="true" className="text-slate-300">/</span>
-            <span>ReTech Hub · Owned by Sanfi</span>
+            <span>ReTech Hub · Owned by Stevee</span>
           </div>
 
           {/* Main Headline */}

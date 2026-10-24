@@ -149,7 +149,7 @@ export const Footer: React.FC = () => {
         {/* Bottom Bar */}
         <div className="pt-6 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="text-[11px] text-slate-500">
-            © {new Date().getFullYear()} ReTech Hub · Owned & operated by Sanfi (Bengaluru, India). All rights reserved.
+            © {new Date().getFullYear()} ReTech Hub · Owned & operated by Stevee (Bengaluru, India). All rights reserved.
           </div>
 
           <div className="flex items-center gap-6">
