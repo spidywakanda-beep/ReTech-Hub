@@ -8,13 +8,23 @@ export const Navbar: React.FC = () => {
     <header className="sticky top-0 z-40 w-full bg-white/95 backdrop-blur-md border-b border-slate-200 transition-colors">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-8">
         
-        {/* Zone 1: Single text element wordmark */}
+        {/* Zone 1: Single text element wordmark with Apple and Android icons */}
         <a 
           href="#" 
-          className="text-xl font-extrabold tracking-tight text-slate-900 whitespace-nowrap shrink-0 flex items-center gap-1 focus-visible:outline-2 focus-visible:outline-orange-500 rounded"
+          className="text-xl font-extrabold tracking-tight text-slate-900 whitespace-nowrap shrink-0 flex items-center gap-2 focus-visible:outline-2 focus-visible:outline-orange-500 rounded group"
         >
-          <span>ReTech</span>
-          <span className="text-orange-600">Hub</span>
+          <div className="flex items-center bg-slate-50 hover:bg-slate-100/90 px-2.5 py-1 rounded-lg border border-slate-200 transition-colors shrink-0">
+            <img 
+              src="/assets/aistudio/image_2011f6cb.png" 
+              alt="Apple, Android, Windows platforms" 
+              className="h-6 sm:h-7 w-auto object-contain mix-blend-multiply"
+            />
+          </div>
+          <div className="flex items-center tracking-tight">
+            <span className="text-orange-600 font-black text-2xl leading-none">i</span>
+            <span className="text-slate-900 font-extrabold text-xl ml-0.5">ReTech</span>
+            <span className="text-orange-600 font-extrabold text-xl ml-0.5">Hub</span>
+          </div>
         </a>
 
         {/* Zone 2: 4–5 clean single-line text navigation links */}

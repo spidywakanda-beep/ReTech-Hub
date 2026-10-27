@@ -34,6 +34,7 @@ export const DisplayGlassCatalog: React.FC = () => {
   const [selectedBrand, setSelectedBrand] = useState<string>('All Brands');
   const [selectedScreenType, setSelectedScreenType] = useState<string>('all');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
+  const [activeModelId, setActiveModelId] = useState<string>('iphone-15-pro-max');
 
   // Modal State
   const [selectedDevice, setSelectedDevice] = useState<DisplayDeviceModel | null>(null);
@@ -454,41 +455,81 @@ export const DisplayGlassCatalog: React.FC = () => {
           })()}
         </div>
 
-        {/* Catalog Search & Filters Strip */}
-        <div className="mt-10 bg-white border border-slate-200 rounded-2xl p-5 shadow-xs space-y-4">
+        {/* Clean Dropdown-Based Smartphone Model Selector */}
+        <div className="mt-10 bg-white border border-slate-200 rounded-2xl p-6 sm:p-8 shadow-xs">
           
-          {/* Top row: Search input + Screen type + Service category */}
-          <div className="grid grid-cols-1 sm:grid-cols-12 gap-3">
+          <div className="max-w-2xl">
+            <span className="text-xs font-bold text-orange-600 uppercase tracking-wider flex items-center gap-1.5">
+              <Smartphone className="w-3.5 h-3.5" />
+              Quick Model Selection
+            </span>
+            <h3 className="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight mt-1">
+              Select Your Smartphone Model via Dropdown
+            </h3>
+            <p className="text-xs sm:text-sm text-slate-600 mt-1.5 leading-relaxed">
+              Select your brand and exact phone model from the dropdowns below to instantly inspect glass replacement feasibility, curved vs flat panel specifications, and recommended refurbishing protocols.
+            </p>
+          </div>
+
+          {/* Cascading Dropdown Controls */}
+          <div className="mt-6 grid grid-cols-1 sm:grid-cols-12 gap-4 items-end bg-slate-50/80 p-4 sm:p-5 rounded-xl border border-slate-200">
             
-            {/* Search Input */}
-            <div className="sm:col-span-6 relative">
-              <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
-                <Search className="w-4 h-4" />
-              </div>
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search model (e.g. S23 Ultra, iPhone 15 Pro, Nord 3, Pixel 8, Reno)..."
-                className="w-full pl-10 pr-9 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs sm:text-sm text-slate-900 placeholder:text-slate-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
-              />
-              {searchQuery && (
-                <button
-                  type="button"
-                  onClick={() => setSearchQuery('')}
-                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-400 hover:text-slate-600"
-                >
-                  <X className="w-4 h-4" />
-                </button>
-              )}
+            {/* 1. Brand Dropdown */}
+            <div className="sm:col-span-4">
+              <label htmlFor="brand-dropdown" className="block text-xs font-bold text-slate-700 uppercase tracking-wide mb-1.5">
+                1. Select Brand
+              </label>
+              <select
+                id="brand-dropdown"
+                value={selectedBrand}
+                onChange={(e) => {
+                  const newBrand = e.target.value;
+                  setSelectedBrand(newBrand);
+                  // Auto select first device of this brand
+                  const firstOfBrand = SMARTPHONE_DISPLAY_CATALOG.find(d => newBrand === 'All Brands' || d.brand === newBrand);
+                  if (firstOfBrand) {
+                    setActiveModelId(firstOfBrand.id);
+                  }
+                }}
+                className="w-full py-2.5 px-3 bg-white border border-slate-300 rounded-xl text-xs sm:text-sm text-slate-900 font-semibold focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all shadow-2xs"
+              >
+                {BRAND_GROUPS.map((brand) => (
+                  <option key={brand} value={brand}>
+                    {brand} ({brandCounts[brand] || 0} models)
+                  </option>
+                ))}
+              </select>
             </div>
 
-            {/* Screen Type Filter */}
-            <div className="sm:col-span-3">
+            {/* 2. Model Dropdown */}
+            <div className="sm:col-span-5">
+              <label htmlFor="model-dropdown" className="block text-xs font-bold text-slate-700 uppercase tracking-wide mb-1.5">
+                2. Select Phone Model ({filteredDevices.length} available)
+              </label>
               <select
+                id="model-dropdown"
+                value={activeModelId}
+                onChange={(e) => setActiveModelId(e.target.value)}
+                className="w-full py-2.5 px-3 bg-white border border-slate-300 rounded-xl text-xs sm:text-sm text-slate-900 font-semibold focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all shadow-2xs"
+              >
+                {filteredDevices.map((device) => (
+                  <option key={device.id} value={device.id}>
+                    {device.modelName} ({device.screenType === 'curved' ? '3D Curved Edge' : device.screenType === 'foldable' ? 'Foldable' : 'Flat'} · {device.series})
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {/* 3. Screen Form Factor Filter */}
+            <div className="sm:col-span-3">
+              <label htmlFor="screen-type-dropdown" className="block text-xs font-bold text-slate-700 uppercase tracking-wide mb-1.5">
+                Screen Form Factor
+              </label>
+              <select
+                id="screen-type-dropdown"
                 value={selectedScreenType}
                 onChange={(e) => setSelectedScreenType(e.target.value)}
-                className="w-full py-2.5 px-3 bg-slate-50 border border-slate-300 rounded-xl text-xs sm:text-sm text-slate-800 font-medium focus:bg-white focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
+                className="w-full py-2.5 px-3 bg-white border border-slate-300 rounded-xl text-xs sm:text-sm text-slate-800 font-medium focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all shadow-2xs"
               >
                 {SCREEN_TYPE_OPTIONS.map(opt => (
                   <option key={opt.value} value={opt.value}>
@@ -498,223 +539,202 @@ export const DisplayGlassCatalog: React.FC = () => {
               </select>
             </div>
 
-            {/* Repair Category Filter */}
-            <div className="sm:col-span-3">
-              <select
-                value={selectedCategory}
-                onChange={(e) => setSelectedCategory(e.target.value)}
-                className="w-full py-2.5 px-3 bg-slate-50 border border-slate-300 rounded-xl text-xs sm:text-sm text-slate-800 font-medium focus:bg-white focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all"
+          </div>
+
+          {/* Quick Model Shortcut Chips */}
+          <div className="mt-4 flex items-center gap-2 overflow-x-auto pb-1 text-xs">
+            <span className="text-slate-400 font-semibold shrink-0">Popular:</span>
+            {[
+              { id: 'iphone-15-pro-max', label: 'iPhone 15 Pro Max', brand: 'Apple' },
+              { id: 'samsung-s23-ultra', label: 'Galaxy S23 Ultra (Curved)', brand: 'Samsung' },
+              { id: 'oneplus-12', label: 'OnePlus 12 (Curved)', brand: 'OnePlus' },
+              { id: 'google-pixel-8-pro', label: 'Pixel 8 Pro', brand: 'Google' },
+              { id: 'xiaomi-13-pro', label: 'Xiaomi 13 Pro (Curved)', brand: 'Xiaomi' },
+              { id: 'iphone-13', label: 'iPhone 13', brand: 'Apple' }
+            ].map(shortcut => (
+              <button
+                key={shortcut.id}
+                type="button"
+                onClick={() => {
+                  setSelectedBrand('All Brands');
+                  setSelectedScreenType('all');
+                  setActiveModelId(shortcut.id);
+                }}
+                className={`px-2.5 py-1 rounded-lg text-xs font-semibold whitespace-nowrap transition-all border ${
+                  activeModelId === shortcut.id
+                    ? 'bg-slate-900 text-white border-slate-900 shadow-2xs'
+                    : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-100 hover:text-slate-900'
+                }`}
               >
-                {REPAIR_CATEGORY_OPTIONS.map(opt => (
-                  <option key={opt.value} value={opt.value}>
-                    {opt.label}
-                  </option>
-                ))}
-              </select>
-            </div>
-
+                {shortcut.label}
+              </button>
+            ))}
           </div>
 
-          {/* Brand Pills Bar */}
-          <div className="pt-2 border-t border-slate-100 flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-thin">
-            <span className="text-xs font-semibold text-slate-400 shrink-0 mr-1 flex items-center gap-1">
-              <SlidersHorizontal className="w-3.5 h-3.5" />
-              Brands:
-            </span>
-            {BRAND_GROUPS.map((brand) => {
-              const count = brandCounts[brand] || 0;
-              const isSelected = selectedBrand === brand;
-              return (
-                <button
-                  key={brand}
-                  type="button"
-                  onClick={() => setSelectedBrand(brand)}
-                  className={`px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-all flex items-center gap-1.5 ${
-                    isSelected
-                      ? 'bg-orange-600 text-white shadow-xs'
-                      : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
-                  }`}
-                >
-                  <span>{brand}</span>
-                  <span className={`text-[10px] px-1.5 py-0.2 rounded-full font-bold ${
-                    isSelected ? 'bg-orange-700 text-white' : 'bg-slate-200 text-slate-600'
-                  }`}>
-                    {count}
-                  </span>
-                </button>
-              );
-            })}
-          </div>
+          {/* Focused Selected Model Specification Card */}
+          {(() => {
+            const currentDevice = SMARTPHONE_DISPLAY_CATALOG.find(d => d.id === activeModelId) || filteredDevices[0] || SMARTPHONE_DISPLAY_CATALOG[0];
+            if (!currentDevice) return null;
 
-        </div>
-
-        {/* Results Counter & Active Filters Summary */}
-        <div className="mt-4 flex flex-wrap items-center justify-between text-xs text-slate-500 px-1 gap-2">
-          <div>
-            Showing <span className="font-bold text-slate-900">{filteredDevices.length}</span> verified smartphone models in repair catalog
-          </div>
-          {(selectedBrand !== 'All Brands' || selectedScreenType !== 'all' || selectedCategory !== 'all' || searchQuery) && (
-            <button
-              type="button"
-              onClick={() => {
-                setSelectedBrand('All Brands');
-                setSelectedScreenType('all');
-                setSelectedCategory('all');
-                setSearchQuery('');
-              }}
-              className="text-orange-600 hover:text-orange-700 font-semibold underline underline-offset-2 flex items-center gap-1"
-            >
-              <X className="w-3.5 h-3.5" />
-              Reset all active filters
-            </button>
-          )}
-        </div>
-
-        {/* Device Cards Grid */}
-        <div className="mt-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-          {filteredDevices.map((device) => {
-            const isCurved = device.screenType === 'curved';
-            const isFoldable = device.screenType === 'foldable';
+            const isCurved = currentDevice.screenType === 'curved';
+            const isFoldable = currentDevice.screenType === 'foldable';
 
             return (
-              <div
-                key={device.id}
-                className="bg-white border border-slate-200 rounded-2xl p-5 hover:border-slate-300 hover:shadow-md transition-all flex flex-col justify-between group"
-              >
-                <div>
-                  
-                  {/* Top Badges */}
-                  <div className="flex items-center justify-between gap-2 mb-3">
-                    <span className="text-[11px] font-bold text-orange-600 bg-orange-50 px-2 py-0.5 rounded-md border border-orange-200/60 uppercase tracking-wide">
-                      {device.brand}
-                    </span>
-
-                    {/* Screen Type Badge */}
-                    <span className={`text-[11px] font-semibold px-2 py-0.5 rounded-md flex items-center gap-1 ${
-                      isCurved
-                        ? 'bg-purple-50 text-purple-700 border border-purple-200'
-                        : isFoldable
-                        ? 'bg-amber-50 text-amber-700 border border-amber-200'
-                        : 'bg-emerald-50 text-emerald-700 border border-emerald-200'
-                    }`}>
-                      <Smartphone className="w-3 h-3" />
-                      <span>{isCurved ? '3D Curved Edge' : isFoldable ? 'Foldable Design' : 'Flat Screen'}</span>
-                    </span>
-                  </div>
-
-                  {/* Model Name */}
-                  <h3 className="text-base font-extrabold text-slate-900 group-hover:text-orange-600 transition-colors">
-                    {device.modelName}
-                  </h3>
-                  <div className="text-xs text-slate-400 font-medium mt-0.5">
-                    {device.series} • Released {device.releaseYear}
-                  </div>
-
-                  {/* Display & Glass Specifications Strip */}
-                  <div className="mt-4 p-3 bg-slate-50/80 rounded-xl border border-slate-100 space-y-2 text-xs">
-                    <div>
-                      <div className="text-[11px] font-medium text-slate-400">Display Technology</div>
-                      <div className="font-semibold text-slate-800 leading-snug mt-0.5">
-                        {device.displayTechnology}
-                      </div>
-                    </div>
-                    <div className="pt-1.5 border-t border-slate-200/60">
-                      <div className="text-[11px] font-medium text-slate-400">Glass Protection Layer</div>
-                      <div className="font-medium text-slate-700 leading-snug mt-0.5">
-                        {device.glassProtection}
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Feasibility Assessment Pill */}
-                  <div className="mt-3.5">
-                    <div className="flex items-center gap-1.5 text-xs">
-                      {device.glassOnlyFeasibility === 'eligible' ? (
-                        <div className="flex items-center gap-1.5 text-emerald-700 bg-emerald-50/80 px-2.5 py-1 rounded-lg border border-emerald-200/80 w-full">
-                          <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
-                          <span className="font-semibold text-[11px]">Glass-Only OCA Refurbishing Eligible</span>
-                        </div>
-                      ) : (
-                        <div className="flex items-center gap-1.5 text-amber-800 bg-amber-50/80 px-2.5 py-1 rounded-lg border border-amber-200/80 w-full">
-                          <Info className="w-3.5 h-3.5 text-amber-600 shrink-0" />
-                          <span className="font-semibold text-[11px]">Outer Screen Eligible | Inner Folder Swap</span>
-                        </div>
-                      )}
-                    </div>
-                    <p className="text-[11px] text-slate-500 mt-1.5 line-clamp-2 leading-relaxed">
-                      {device.feasibilityTechnicalNotes}
-                    </p>
-                  </div>
-
-                  {/* Applicable Service Badges */}
-                  <div className="mt-3 pt-3 border-t border-slate-100 flex flex-wrap gap-1">
-                    {device.applicableServices.map(srv => {
-                      const labelMap: Record<RepairCategory, string> = {
-                        'front-glass-flat': 'Flat Glass OCA',
-                        'front-glass-curved': '3D Curved Glass',
-                        'display-assembly': 'Full Folder Combo',
-                        'touch-diagnosis': 'Circuit Diagnostic',
-                        'rear-glass': 'Back Glass Laser'
-                      };
-                      return (
-                        <span key={srv} className="text-[10px] font-medium text-slate-600 bg-slate-100 px-2 py-0.5 rounded-md">
-                          {labelMap[srv]}
-                        </span>
-                      );
-                    })}
-                    {device.rearGlassAvailable && (
-                      <span className="text-[10px] font-medium text-blue-700 bg-blue-50 px-2 py-0.5 rounded-md border border-blue-200/60">
-                        Back Glass Supported
+              <div className="mt-6 bg-white border-2 border-orange-500/30 rounded-2xl p-6 sm:p-7 shadow-sm transition-all">
+                
+                {/* Header Banner */}
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-5 border-b border-slate-100">
+                  <div>
+                    <div className="flex items-center gap-2 mb-1.5">
+                      <span className="text-xs font-bold text-orange-600 bg-orange-50 px-2.5 py-0.5 rounded-md border border-orange-200/60 uppercase tracking-wide">
+                        {currentDevice.brand}
                       </span>
+                      <span className="text-xs text-slate-400 font-medium">
+                        {currentDevice.series} • Released {currentDevice.releaseYear}
+                      </span>
+                      <span className={`text-xs font-semibold px-2.5 py-0.5 rounded-md flex items-center gap-1 ${
+                        isCurved
+                          ? 'bg-purple-50 text-purple-700 border border-purple-200'
+                          : isFoldable
+                          ? 'bg-amber-50 text-amber-700 border border-amber-200'
+                          : 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                      }`}>
+                        <Smartphone className="w-3.5 h-3.5" />
+                        <span>{isCurved ? '3D Curved Edge Display' : isFoldable ? 'Foldable AMOLED' : 'Flat Glass Design'}</span>
+                      </span>
+                    </div>
+
+                    <h4 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
+                      {currentDevice.modelName}
+                    </h4>
+                    <div className="text-xs text-slate-500 mt-1">
+                      Hardware Model Codes: <span className="font-mono font-semibold text-slate-800">{currentDevice.modelNumberIdentifiers.join(', ')}</span>
+                    </div>
+                  </div>
+
+                  {/* Feasibility Pill */}
+                  <div className="sm:text-right shrink-0">
+                    {currentDevice.glassOnlyFeasibility === 'eligible' ? (
+                      <div className="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-800 bg-emerald-50 px-3 py-1.5 rounded-xl border border-emerald-200">
+                        <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                        <span>Glass-Only (OCA) Refurbishing Eligible</span>
+                      </div>
+                    ) : (
+                      <div className="inline-flex items-center gap-1.5 text-xs font-bold text-amber-800 bg-amber-50 px-3 py-1.5 rounded-xl border border-amber-200">
+                        <AlertTriangle className="w-4 h-4 text-amber-600 shrink-0" />
+                        <span>Outer Glass Eligible / Full Folder Advisory</span>
+                      </div>
                     )}
+                    <div className="text-[11px] text-slate-500 mt-1">
+                      Turnaround: <strong className="text-slate-800">~{currentDevice.benchProtocol.turnaroundEstimate}</strong>
+                    </div>
+                  </div>
+                </div>
+
+                {/* 4 Crisp Specification Cards */}
+                <div className="mt-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
+                  
+                  {/* Spec 1: Display Panel */}
+                  <div className="bg-slate-50/90 p-4 rounded-xl border border-slate-200/80">
+                    <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wide block">
+                      Display Panel Tech
+                    </span>
+                    <span className="text-xs sm:text-sm font-bold text-slate-900 mt-1 block leading-snug">
+                      {currentDevice.displayTechnology}
+                    </span>
+                  </div>
+
+                  {/* Spec 2: Glass Protection */}
+                  <div className="bg-slate-50/90 p-4 rounded-xl border border-slate-200/80">
+                    <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wide block">
+                      OEM Glass Layer
+                    </span>
+                    <span className="text-xs sm:text-sm font-bold text-slate-900 mt-1 block leading-snug">
+                      {currentDevice.glassProtection}
+                    </span>
+                  </div>
+
+                  {/* Spec 3: Bench Separation Technique */}
+                  <div className="bg-slate-50/90 p-4 rounded-xl border border-slate-200/80">
+                    <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wide block">
+                      Refurbishing Bench Method
+                    </span>
+                    <span className="text-xs sm:text-sm font-bold text-slate-900 mt-1 block leading-snug">
+                      {currentDevice.benchProtocol.separationMethod}
+                    </span>
+                  </div>
+
+                  {/* Spec 4: Recommended Part Grade */}
+                  <div className="bg-slate-50/90 p-4 rounded-xl border border-slate-200/80">
+                    <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wide block">
+                      Part Grade Standard
+                    </span>
+                    <span className="text-xs sm:text-sm font-bold text-orange-600 mt-1 block leading-snug">
+                      {currentDevice.recommendedPartGrades.glassOnlyGrade}
+                    </span>
                   </div>
 
                 </div>
 
-                {/* Card Action */}
-                <div className="mt-5 pt-4 border-t border-slate-100 flex items-center justify-between">
-                  <div className="text-[11px] text-slate-400 flex items-center gap-1">
-                    <Clock className="w-3.5 h-3.5 text-slate-400" />
-                    <span>~{device.benchProtocol.turnaroundEstimate}</span>
+                {/* Technical Feasibility Notes */}
+                <div className="mt-4 p-4 rounded-xl bg-orange-50/40 border border-orange-100 flex items-start gap-3">
+                  <Info className="w-4 h-4 text-orange-600 shrink-0 mt-0.5" />
+                  <div className="text-xs text-slate-700 leading-relaxed">
+                    <span className="font-bold text-slate-900">Refurbishing Assessment: </span>
+                    {currentDevice.feasibilityTechnicalNotes}
+                  </div>
+                </div>
+
+                {/* Card Actions Footer */}
+                <div className="mt-5 pt-4 border-t border-slate-100 flex flex-wrap items-center justify-between gap-3">
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs font-semibold text-slate-500">Applicable Bench Services:</span>
+                    <div className="flex flex-wrap gap-1">
+                      {currentDevice.applicableServices.map(srv => {
+                        const labelMap: Record<RepairCategory, string> = {
+                          'front-glass-flat': 'Flat Glass OCA',
+                          'front-glass-curved': '3D Curved Glass',
+                          'display-assembly': 'Full Folder Combo',
+                          'touch-diagnosis': 'Circuit Diagnostic',
+                          'rear-glass': 'Back Glass Laser'
+                        };
+                        return (
+                          <span key={srv} className="text-[10px] font-medium text-slate-700 bg-slate-100 px-2 py-0.5 rounded-md">
+                            {labelMap[srv]}
+                          </span>
+                        );
+                      })}
+                      {currentDevice.rearGlassAvailable && (
+                        <span className="text-[10px] font-medium text-blue-700 bg-blue-50 px-2 py-0.5 rounded-md border border-blue-200/60">
+                          Back Glass Supported
+                        </span>
+                      )}
+                    </div>
                   </div>
 
-                  <button
-                    type="button"
-                    onClick={() => setSelectedDevice(device)}
-                    className="inline-flex items-center gap-1 text-xs font-bold text-orange-600 hover:text-orange-700 hover:underline underline-offset-4 transition-all"
-                  >
-                    <span>Inspect Bench Specs</span>
-                    <ArrowRight className="w-3.5 h-3.5" />
-                  </button>
+                  <div className="flex items-center gap-3">
+                    <a
+                      href="#repairs"
+                      className="px-4 py-2 bg-orange-600 hover:bg-orange-500 text-white text-xs font-bold rounded-xl transition-all shadow-xs"
+                    >
+                      Book Repair for {currentDevice.modelName.split(' ')[0]}
+                    </a>
+                    <button
+                      type="button"
+                      onClick={() => setSelectedDevice(currentDevice)}
+                      className="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold rounded-xl transition-all inline-flex items-center gap-1.5"
+                    >
+                      <span>Full Technical Bench Sheet</span>
+                      <ArrowRight className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
                 </div>
 
               </div>
             );
-          })}
-        </div>
+          })()}
 
-        {/* Empty Search State */}
-        {filteredDevices.length === 0 && (
-          <div className="mt-8 text-center py-16 bg-white border border-slate-200 rounded-2xl p-6">
-            <HelpCircle className="w-10 h-10 text-slate-300 mx-auto mb-3" />
-            <h3 className="text-base font-bold text-slate-800">No matching smartphone models found</h3>
-            <p className="text-xs text-slate-500 mt-1 max-w-md mx-auto">
-              We couldn't find any devices matching "{searchQuery}" under the selected brand and screen filters. Try clearing your search term or adjusting filters.
-            </p>
-            <button
-              type="button"
-              onClick={() => {
-                setSelectedBrand('All Brands');
-                setSelectedScreenType('all');
-                setSelectedCategory('all');
-                setSearchQuery('');
-              }}
-              className="mt-4 px-4 py-2 bg-slate-900 text-white text-xs font-semibold rounded-lg hover:bg-slate-800 transition-colors"
-            >
-              Reset Filters
-            </button>
-          </div>
-        )}
+        </div>
 
       </div>
 
