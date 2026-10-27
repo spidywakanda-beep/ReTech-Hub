@@ -9,16 +9,18 @@ export const WhyChooseUs: React.FC = () => {
         
         {/* Section Header */}
         <div className="max-w-3xl mb-12">
-          <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-orange-600 mb-1.5 font-semibold">
-            <span>Section 05</span>
-            <span aria-hidden="true" className="text-slate-300">/</span>
+          <div className="flex flex-wrap items-center gap-2 text-xs font-mono uppercase tracking-wider text-orange-600 mb-1.5 font-semibold">
             <span>Operating Principles</span>
+            <span aria-hidden="true" className="text-slate-300">/</span>
+            <span>Used · Open-Box · Global Units</span>
+            <span aria-hidden="true" className="text-slate-300">/</span>
+            <span className="text-slate-600 normal-case">Upgrade Your Phone, Upgrade Your Life</span>
           </div>
           <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight text-balance">
             Why Choose ReTech Hub
           </h2>
           <p className="text-sm sm:text-base text-slate-600 mt-2 leading-relaxed">
-            We built ReTech Hub around radical hardware transparency: testing every circuit, providing itemized quotes before repair, and guaranteeing authentic pre-owned performance.
+            We built ReTech Hub around radical hardware transparency: testing every circuit, providing itemized quotes before repair, and offering verified used, open-box, and global smartphone units tailored for every budget in Bengaluru.
           </p>
         </div>
 
@@ -65,7 +67,7 @@ export const WhyChooseUs: React.FC = () => {
               <span className="text-slate-700">Stevee, Founder & Operator</span>
             </div>
             <p className="text-sm text-slate-700 leading-relaxed italic">
-              "At ReTech Hub, our philosophy is simple: test every circuit with integrity, never recommend unnecessary part replacements, and give every customer in Bengaluru the certainty of hands-on device testing before buying or leaving a repair."
+              "At ReTech Hub, our philosophy is simple: test every circuit with integrity—whether it's a pre-owned daily driver, an open-box showcase handset, or an imported global unit. Never recommend unnecessary part replacements, and give every customer in Bengaluru the certainty of hands-on device testing before buying or leaving a repair."
             </p>
           </div>
           <div className="shrink-0 text-left sm:text-right font-mono text-xs">

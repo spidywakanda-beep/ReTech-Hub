@@ -19,6 +19,7 @@ import {
 } from 'lucide-react';
 import { SMARTPHONE_CATALOG, SmartphoneModel } from '../data/smartphoneCatalog';
 import { LAPTOP_CATALOG, LaptopModel } from '../data/laptopCatalog';
+import { BRAND_MODELS_MAP } from '../data/repairBookingData';
 import { PhoneDeviceVisual } from './PhoneDeviceVisual';
 import { LaptopDeviceVisual } from './LaptopDeviceVisual';
 import { SmartphoneDetailModal } from './SmartphoneDetailModal';
@@ -63,14 +64,32 @@ export const UpperDeviceSelector: React.FC = () => {
 
   const isPhoneMode = activeMode === 'sell-phone' || activeMode === 'buy-phone';
   const isSellMode = activeMode === 'sell-phone' || activeMode === 'sell-laptop';
+  const [isModelLoading, setIsModelLoading] = useState(false);
 
-  // Available brands
+  // Available brands (22+ Brands: Apple, Samsung, Google, OnePlus, Oppo, Vivo, Realme, Xiaomi, Poco, Motorola, Nokia, Nothing, Asus, Huawei, Infinix, Lenovo, LG, Sony, HTC, Microsoft, ZTE, Others)
   const phoneBrands = useMemo(() => [
     { key: 'apple', label: 'Apple (iPhone)' },
     { key: 'samsung', label: 'Samsung Galaxy' },
+    { key: 'google', label: 'Google Pixel' },
     { key: 'oneplus', label: 'OnePlus' },
+    { key: 'oppo', label: 'Oppo' },
+    { key: 'vivo', label: 'vivo' },
+    { key: 'realme', label: 'Realme' },
     { key: 'xiaomi', label: 'Xiaomi / Redmi' },
-    { key: 'vivo', label: 'vivo' }
+    { key: 'poco', label: 'Poco' },
+    { key: 'motorola', label: 'Motorola' },
+    { key: 'nokia', label: 'Nokia' },
+    { key: 'nothing', label: 'Nothing Phone' },
+    { key: 'asus', label: 'Asus (ROG / Zenfone)' },
+    { key: 'huawei', label: 'Huawei' },
+    { key: 'infinix', label: 'Infinix' },
+    { key: 'lenovo', label: 'Lenovo' },
+    { key: 'lg', label: 'LG' },
+    { key: 'sony', label: 'Sony Xperia' },
+    { key: 'htc', label: 'HTC' },
+    { key: 'microsoft', label: 'Microsoft Surface' },
+    { key: 'zte', label: 'ZTE (Nubia)' },
+    { key: 'others', label: 'Others (Universal / Unlisted)' }
   ], []);
 
   const laptopBrands = useMemo(() => [
@@ -81,9 +100,41 @@ export const UpperDeviceSelector: React.FC = () => {
     { key: 'asus', label: 'ASUS (VivoBook / Zenbook)' }
   ], []);
 
-  // Filtered phone list for dropdown
+  // Filtered phone list for dropdown (with synthesized fallbacks for extended brands)
   const filteredPhones = useMemo(() => {
     let list = SMARTPHONE_CATALOG.filter(p => p.brandKey === selectedPhoneBrand);
+
+    // If brand is one of the extended brands not in SMARTPHONE_CATALOG, synthesize from BRAND_MODELS_MAP
+    if (list.length === 0 && BRAND_MODELS_MAP[selectedPhoneBrand]) {
+      list = BRAND_MODELS_MAP[selectedPhoneBrand].map(m => ({
+        id: m.id,
+        os: (selectedPhoneBrand === 'apple' ? 'ios' : 'android') as any,
+        brand: (m.brandId.charAt(0).toUpperCase() + m.brandId.slice(1)) as any,
+        brandKey: selectedPhoneBrand as any,
+        series: m.series,
+        name: m.name,
+        releaseYear: m.releaseYear,
+        tier: 'flagship' as const,
+        tierLabel: `${m.name} Tier`,
+        keyHighlights: [m.displayTech, `${m.screenType === 'curved' ? 'Curved Display' : 'Flat Display'}`, 'Verified Hardware Matrix'],
+        specs: {
+          display: m.displayTech,
+          chipset: 'Flagship Core Processor',
+          rearCameras: 'High-Res Optical Sensor Suite',
+          frontCamera: 'HDR Selfie Camera',
+          batteryAndCharging: 'High-Density Fast Charge',
+          osAtLaunch: 'Standard OS',
+          buildAndDesign: `${m.screenType === 'curved' ? 'Curved Glass Chassis' : 'Precision Aluminum Frame'}`,
+          connectivity: '5G, Wi-Fi, Bluetooth, NFC'
+        },
+        usedMarketGuide: {
+          recommendedInspection: ['Touch digitizer matrix', 'Battery discharge curve', 'Biometric sensor response'],
+          typicalUsedStorageVariants: ['128 GB', '256 GB', '512 GB'],
+          buyerAdvice: 'Bench verified hardware with 40-point diagnostic certification.'
+        }
+      }));
+    }
+
     if (modelSearch.trim()) {
       const q = modelSearch.toLowerCase();
       list = list.filter(p => p.name.toLowerCase().includes(q) || p.series.toLowerCase().includes(q));
@@ -218,16 +269,18 @@ export const UpperDeviceSelector: React.FC = () => {
         
         {/* Section Heading with Clean Startup Identity */}
         <div className="max-w-3xl mb-8">
-          <div className="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-orange-600 mb-1.5 font-semibold">
-            <span>ReTech Hub Startup Desk</span>
+          <div className="flex flex-wrap items-center gap-2 text-xs font-mono uppercase tracking-wider text-orange-600 mb-1.5 font-semibold">
+            <span>Bengaluru Device Hub</span>
             <span aria-hidden="true" className="text-slate-300">/</span>
-            <span>Instant Device Valuation & Trade-In</span>
+            <span>Used · Open-Box · Global Units</span>
+            <span aria-hidden="true" className="text-slate-300">/</span>
+            <span className="text-slate-600 font-medium normal-case">Upgrade Your Phone, Upgrade Your Life</span>
           </div>
           <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-slate-900 tracking-tight">
-            Select Your Device for an Instant Quote
+            Best-Price Phones for Every Budget · Deals for Every Need
           </h2>
           <p className="text-sm sm:text-base text-slate-600 mt-2 leading-relaxed">
-            Choose your device brand and model from the dropdown below to check live walk-in cash trade-in values or inspect verified hardware configurations without endless page clutter.
+            Upgrade smart in Bengaluru. Select any device below to calculate live walk-in cash trade-in values, explore pre-owned, open-box, and international variants, or inspect 40-point verified hardware specifications.
           </p>
         </div>
 
@@ -271,7 +324,7 @@ export const UpperDeviceSelector: React.FC = () => {
               }`}
             >
               <Sparkles className="w-4 h-4 text-emerald-400" />
-              <span>Buy Certified Phone</span>
+              <span>Explore Phones (Used · Open-Box · Global)</span>
             </button>
 
             <button
@@ -284,7 +337,7 @@ export const UpperDeviceSelector: React.FC = () => {
               }`}
             >
               <ShieldCheck className="w-4 h-4 text-emerald-400" />
-              <span>Buy Certified Laptop</span>
+              <span>Explore Laptops (Pre-Owned)</span>
             </button>
 
             <a
@@ -292,7 +345,7 @@ export const UpperDeviceSelector: React.FC = () => {
               className="hidden lg:inline-flex items-center justify-center gap-2 px-4 py-3 text-xs sm:text-sm font-semibold text-slate-600 hover:text-orange-600 rounded-xl hover:bg-white transition-colors"
             >
               <Wrench className="w-4 h-4 text-orange-500" />
-              <span>Repair Estimator</span>
+              <span>Explore Repair Services</span>
             </a>
 
           </div>
@@ -314,13 +367,21 @@ export const UpperDeviceSelector: React.FC = () => {
                     onChange={(e) => {
                       const newBrand = e.target.value;
                       if (isPhoneMode) {
+                        setIsModelLoading(true);
                         setSelectedPhoneBrand(newBrand);
-                        const first = SMARTPHONE_CATALOG.find(p => p.brandKey === newBrand);
+                        const first = SMARTPHONE_CATALOG.find(p => p.brandKey === newBrand) || BRAND_MODELS_MAP[newBrand]?.[0];
                         if (first) setSelectedPhoneId(first.id);
+                        setTimeout(() => {
+                          setIsModelLoading(false);
+                        }, 350);
                       } else {
+                        setIsModelLoading(true);
                         setSelectedLaptopBrand(newBrand);
                         const first = LAPTOP_CATALOG.find(l => l.brandKey === newBrand);
                         if (first) setSelectedLaptopId(first.id);
+                        setTimeout(() => {
+                          setIsModelLoading(false);
+                        }, 300);
                       }
                       setModelSearch('');
                     }}
@@ -340,41 +401,55 @@ export const UpperDeviceSelector: React.FC = () => {
                 </div>
               </div>
 
-              {/* Dropdown 2: Select Model */}
+              {/* Dropdown 2: Select Model (Searchable, Dependent on Brand, Skeleton Loading) */}
               <div>
                 <div className="flex items-center justify-between mb-2">
                   <label className="text-xs font-mono font-bold uppercase tracking-wider text-slate-500">
                     2. Select Model ({isPhoneMode ? filteredPhones.length : filteredLaptops.length})
                   </label>
+                  {isModelLoading && (
+                    <span className="text-[10px] font-mono text-orange-600 animate-pulse font-semibold">
+                      Loading...
+                    </span>
+                  )}
                 </div>
-                <div className="relative">
-                  <select
-                    value={isPhoneMode ? selectedPhoneId : selectedLaptopId}
-                    onChange={(e) => {
-                      if (isPhoneMode) {
-                        setSelectedPhoneId(e.target.value);
-                      } else {
-                        setSelectedLaptopId(e.target.value);
-                      }
-                    }}
-                    className="w-full appearance-none bg-slate-50 hover:bg-slate-100/80 border border-slate-300 rounded-xl px-4 py-3 text-sm font-semibold text-slate-900 focus:outline-none focus:ring-2 focus:ring-orange-500 cursor-pointer transition-colors pr-10 truncate"
-                  >
-                    {isPhoneMode ? (
-                      filteredPhones.map(phone => (
-                        <option key={phone.id} value={phone.id}>
-                          {phone.name} ({phone.releaseYear})
-                        </option>
-                      ))
-                    ) : (
-                      filteredLaptops.map(laptop => (
-                        <option key={laptop.id} value={laptop.id}>
-                          {laptop.name}
-                        </option>
-                      ))
-                    )}
-                  </select>
-                  <ChevronDown className="w-4 h-4 text-slate-500 absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
-                </div>
+
+                {isModelLoading ? (
+                  /* Skeleton Loading State */
+                  <div className="w-full h-[46px] rounded-xl bg-slate-100 border border-slate-200 animate-pulse flex items-center px-4">
+                    <div className="h-4 w-36 bg-slate-300 rounded"></div>
+                  </div>
+                ) : (
+                  <div className="relative">
+                    <select
+                      disabled={isPhoneMode ? !selectedPhoneBrand : !selectedLaptopBrand}
+                      value={isPhoneMode ? selectedPhoneId : selectedLaptopId}
+                      onChange={(e) => {
+                        if (isPhoneMode) {
+                          setSelectedPhoneId(e.target.value);
+                        } else {
+                          setSelectedLaptopId(e.target.value);
+                        }
+                      }}
+                      className="w-full appearance-none bg-slate-50 hover:bg-slate-100/80 border border-slate-300 rounded-xl px-4 py-3 text-sm font-semibold text-slate-900 focus:outline-none focus:ring-2 focus:ring-orange-500 cursor-pointer transition-colors pr-10 truncate disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      {isPhoneMode ? (
+                        filteredPhones.map(phone => (
+                          <option key={phone.id} value={phone.id}>
+                            {phone.name} ({phone.releaseYear})
+                          </option>
+                        ))
+                      ) : (
+                        filteredLaptops.map(laptop => (
+                          <option key={laptop.id} value={laptop.id}>
+                            {laptop.name}
+                          </option>
+                        ))
+                      )}
+                    </select>
+                    <ChevronDown className="w-4 h-4 text-slate-500 absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+                  </div>
+                )}
               </div>
 
               {/* Dropdown 3: Storage / Spec Variant */}
@@ -498,6 +573,46 @@ export const UpperDeviceSelector: React.FC = () => {
               </div>
             </div>
 
+            {/* Device Sourcing & Variant Guide (Used vs Open-Box vs Global Units) */}
+            <div className="pt-4 border-t border-slate-100">
+              <div className="flex items-center gap-2 mb-2 text-xs font-mono font-bold uppercase tracking-wider text-slate-500">
+                <Info className="w-3.5 h-3.5 text-orange-600" />
+                <span>Understanding Our 3 Device Sourcing Categories</span>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
+                <div className="p-3 rounded-xl bg-slate-50 border border-slate-200/80">
+                  <div className="font-bold text-slate-900 flex items-center gap-1.5 mb-1">
+                    <span className="w-2 h-2 rounded-full bg-orange-500 shrink-0"></span>
+                    <span>1. Used / Pre-Owned</span>
+                  </div>
+                  <p className="text-[11px] text-slate-600 leading-relaxed">
+                    Prior-owned phones and laptops tested across 40 inspection points. Graded transparently (Flawless, Good, Fair) for maximum budget savings.
+                  </p>
+                </div>
+                <div className="p-3 rounded-xl bg-slate-50 border border-slate-200/80">
+                  <div className="font-bold text-slate-900 flex items-center gap-1.5 mb-1">
+                    <span className="w-2 h-2 rounded-full bg-emerald-500 shrink-0"></span>
+                    <span>2. Open-Box Units</span>
+                  </div>
+                  <p className="text-[11px] text-slate-600 leading-relaxed">
+                    Unsealed packaging, store demo units, or immediate customer returns. Near-zero cycle counts with showroom-level cosmetic condition.
+                  </p>
+                </div>
+                <div className="p-3 rounded-xl bg-slate-50 border border-slate-200/80">
+                  <div className="font-bold text-slate-900 flex items-center gap-1.5 mb-1">
+                    <span className="w-2 h-2 rounded-full bg-blue-500 shrink-0"></span>
+                    <span>3. Global Units</span>
+                  </div>
+                  <p className="text-[11px] text-slate-600 leading-relaxed">
+                    Genuine international editions individually checked by our technicians for Indian 4G/5G band lock (Airtel & Jio), eSIM support, and chargers.
+                  </p>
+                </div>
+              </div>
+              <p className="text-[11px] text-slate-500 mt-2 font-mono">
+                * Note: Stock and prices vary based on condition and market availability. Hands-on testing is conducted in Bengaluru before purchase.
+              </p>
+            </div>
+
           </div>
 
           {/* ================= SINGLE SELECTED DEVICE RESULT CARD (NO WALL OF IMAGES!) ================= */}
@@ -582,7 +697,7 @@ export const UpperDeviceSelector: React.FC = () => {
 
                       <div className="text-right">
                         <span className="text-xs font-medium text-slate-500 block">
-                          {isSellMode ? 'Instant Cash Trade-In Value' : 'Certified Pre-Owned Price'}
+                          {isSellMode ? 'Instant Cash Trade-In Value' : 'Best-Price Estimate (Used · Open-Box · Global)'}
                         </span>
                         <div className="text-3xl sm:text-4xl font-extrabold text-orange-600 tracking-tight mt-0.5">
                           ₹{phoneValuation.finalPrice.toLocaleString('en-IN')}
@@ -638,7 +753,7 @@ export const UpperDeviceSelector: React.FC = () => {
                         className="inline-flex items-center justify-center gap-2 px-6 py-3 text-sm font-semibold text-white bg-orange-600 hover:bg-orange-500 active:scale-98 rounded-xl shadow-xs transition-all"
                       >
                         <FileText className="w-4 h-4" />
-                        <span>{isSellMode ? 'Lock In Instant Cash Quote' : 'Reserve In Bengaluru Store'}</span>
+                        <span>{isSellMode ? 'Lock In Instant Cash Quote' : 'Explore Device & Reserve in Store'}</span>
                       </button>
 
                       <button
@@ -702,7 +817,7 @@ export const UpperDeviceSelector: React.FC = () => {
 
                       <div className="text-right">
                         <span className="text-xs font-medium text-slate-500 block">
-                          {isSellMode ? 'Instant Cash Trade-In Value' : 'Certified Pre-Owned Price'}
+                          {isSellMode ? 'Instant Cash Trade-In Value' : 'Best-Price Estimate (Pre-Owned Laptops)'}
                         </span>
                         <div className="text-3xl sm:text-4xl font-extrabold text-orange-600 tracking-tight mt-0.5">
                           ₹{laptopValuation.finalPrice.toLocaleString('en-IN')}
@@ -753,7 +868,7 @@ export const UpperDeviceSelector: React.FC = () => {
                         className="inline-flex items-center justify-center gap-2 px-6 py-3 text-sm font-semibold text-white bg-orange-600 hover:bg-orange-500 active:scale-98 rounded-xl shadow-xs transition-all"
                       >
                         <FileText className="w-4 h-4" />
-                        <span>{isSellMode ? 'Lock In Laptop Cash Quote' : 'Reserve Laptop In Store'}</span>
+                        <span>{isSellMode ? 'Lock In Laptop Cash Quote' : 'Explore Laptop & Reserve in Store'}</span>
                       </button>
 
                       <button

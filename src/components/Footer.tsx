@@ -21,11 +21,11 @@ export const Footer: React.FC = () => {
             </a>
             
             <p className="text-sm text-slate-700 font-medium">
-              Buy Smart. Sell Smart.
+              Buy Smart. Sell Smart. · Upgrade Your Phone, Upgrade Your Life
             </p>
 
             <p className="text-xs text-slate-500 max-w-sm leading-relaxed">
-              Bengaluru’s destination for certified pre-owned smartphones, tested enterprise laptops, premium fast-charging accessories, and transparent electronics repair diagnostics.
+              Bengaluru’s destination for used, open-box, and global smartphones for every budget, tested enterprise laptops, premium fast-charging accessories, and transparent walk-in electronics repair diagnostics.
             </p>
 
             {/* Location Tag */}
@@ -103,38 +103,35 @@ export const Footer: React.FC = () => {
             </ul>
           </div>
 
-          {/* Column 4: Standards & Gear */}
+          {/* Column 4: Supported Brands (22+ Brands) */}
           <div className="space-y-3">
             <div className="text-xs font-mono uppercase tracking-wider text-slate-900 font-bold">
-              Quality & Gear
+              Supported Brands
             </div>
-            <ul className="space-y-2">
-              <li>
-                <a href="#standards" className="hover:text-slate-900 hover:underline underline-offset-4 transition-colors">
-                  40-Point Inspection Matrix
+            <p className="text-[11px] text-slate-500 leading-relaxed">
+              Doorstep pickup, repairs & trade-in across Apple, Samsung, Google, OnePlus, Oppo, Vivo, Realme, Xiaomi, Poco, Motorola, Nokia, Nothing, Asus, Huawei, Infinix, Lenovo, LG, Sony, HTC, Microsoft, ZTE, and others.
+            </p>
+            <div className="flex flex-wrap gap-1 pt-1">
+              {[
+                'Apple', 'Samsung', 'Google', 'OnePlus', 'Oppo', 'Vivo', 'Realme', 'Xiaomi',
+                'Poco', 'Motorola', 'Nokia', 'Nothing', 'Asus', 'Huawei', 'Infinix', 'Lenovo',
+                'LG', 'Sony', 'HTC', 'Microsoft', 'ZTE'
+              ].map((brand) => (
+                <a
+                  key={brand}
+                  href="#repairs"
+                  className="px-2 py-0.5 rounded text-[10px] font-mono bg-slate-200/70 text-slate-700 hover:bg-slate-900 hover:text-white transition-colors"
+                >
+                  {brand}
                 </a>
-              </li>
-              <li>
-                <a href="#standards" className="hover:text-slate-900 hover:underline underline-offset-4 transition-colors">
-                  Eco E-Waste Disposal
-                </a>
-              </li>
-              <li>
-                <a href="#accessories" className="hover:text-slate-900 hover:underline underline-offset-4 transition-colors">
-                  GaN 65W/100W Fast Chargers
-                </a>
-              </li>
-              <li>
-                <a href="#accessories" className="hover:text-slate-900 hover:underline underline-offset-4 transition-colors">
-                  Braided Ballistic Cables
-                </a>
-              </li>
-              <li>
-                <a href="#how-it-works" className="hover:text-slate-900 hover:underline underline-offset-4 transition-colors">
-                  Trade-In Valuation Matrix
-                </a>
-              </li>
-            </ul>
+              ))}
+              <a
+                href="#repairs"
+                className="px-2 py-0.5 rounded text-[10px] font-mono bg-orange-100 text-orange-800 hover:bg-orange-600 hover:text-white transition-colors"
+              >
+                + More
+              </a>
+            </div>
           </div>
 
         </div>
@@ -142,7 +139,7 @@ export const Footer: React.FC = () => {
         {/* Legal Disclaimer & Transparency Statement */}
         <div className="py-6 border-b border-slate-200 text-[11px] text-slate-500 leading-relaxed font-mono">
           <p>
-            Transparency Notice: ReTech Hub operates in Bengaluru, India. All prices, specifications, and turnaround durations displayed on this website are indicative reference benchmarks for in-store consultation and stock availability. Physical multi-point testing is conducted on-site prior to device purchase or trade-in. Third-party brand names, logos, and registered marks (including Apple, Samsung, Google, OnePlus, Xiaomi, vivo, Lenovo, Dell) are the property of their respective trademark owners and are referenced solely for identification and compatibility purposes.
+            Transparency Notice: ReTech Hub operates in Bengaluru, India. Used, open-box, and global smartphone units and laptops displayed on this website are indicative reference benchmarks for in-store consultation and stock availability. Every device is physically bench-tested on-site prior to purchase or trade-in; global variants are specifically verified for Indian carrier bands (Airtel, Jio, Vi). Third-party brand names, logos, and registered marks (including Apple, Samsung, Google, OnePlus, Xiaomi, vivo, Lenovo, Dell) are the property of their respective trademark owners and are referenced solely for identification and compatibility purposes.
           </p>
         </div>
 

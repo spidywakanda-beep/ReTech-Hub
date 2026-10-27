@@ -18,24 +18,30 @@ export const Navbar: React.FC = () => {
         </a>
 
         {/* Zone 2: 4–5 clean single-line text navigation links */}
-        <nav className="hidden md:flex items-center gap-7 text-sm font-medium text-slate-600">
+        <nav className="hidden md:flex items-center gap-6 lg:gap-7 text-sm font-medium text-slate-600">
           <a 
             href="#device-selector" 
             className="hover:text-slate-900 hover:underline underline-offset-4 decoration-orange-500 transition-colors whitespace-nowrap shrink-0"
           >
-            Trade-In & Valuation
+            Smartphones
+          </a>
+          <a 
+            href="#device-selector" 
+            className="hover:text-slate-900 hover:underline underline-offset-4 decoration-orange-500 transition-colors whitespace-nowrap shrink-0"
+          >
+            Laptops
           </a>
           <a 
             href="#repairs" 
             className="hover:text-slate-900 hover:underline underline-offset-4 decoration-orange-500 transition-colors whitespace-nowrap shrink-0"
           >
-            Repairs
+            Repair Services
           </a>
           <a 
             href="#display-catalog" 
             className="hover:text-slate-900 hover:underline underline-offset-4 decoration-orange-500 transition-colors whitespace-nowrap shrink-0 flex items-center gap-1"
           >
-            <span>Display & Glass Catalog</span>
+            <span>Display & Glass</span>
             <span className="text-[10px] font-bold px-1.5 py-0.2 rounded bg-orange-100 text-orange-700">New</span>
           </a>
           <a 
@@ -61,10 +67,10 @@ export const Navbar: React.FC = () => {
         {/* Zone 3: 1 primary action */}
         <div className="flex items-center gap-3 shrink-0">
           <a
-            href="#diagnostic-estimator"
+            href="#repairs"
             className="hidden sm:inline-flex items-center gap-1.5 px-4 py-2 text-xs font-semibold text-white bg-orange-600 rounded-lg hover:bg-orange-500 active:scale-98 transition-all whitespace-nowrap shrink-0 shadow-xs focus-visible:outline-2 focus-visible:outline-orange-400"
           >
-            <span>Repair Estimator</span>
+            <span>Explore Repair Services</span>
             <ArrowUpRight className="w-3.5 h-3.5 text-white/90" />
           </a>
 
@@ -89,14 +95,21 @@ export const Navbar: React.FC = () => {
             onClick={() => setMobileMenuOpen(false)}
             className="block px-3 py-2 rounded-md text-sm font-medium text-slate-700 hover:text-slate-900 hover:bg-slate-50"
           >
-            Trade-In & Valuation
+            Smartphones (Used · Open-Box · Global)
+          </a>
+          <a
+            href="#device-selector"
+            onClick={() => setMobileMenuOpen(false)}
+            className="block px-3 py-2 rounded-md text-sm font-medium text-slate-700 hover:text-slate-900 hover:bg-slate-50"
+          >
+            Laptops (Certified Pre-Owned)
           </a>
           <a
             href="#repairs"
             onClick={() => setMobileMenuOpen(false)}
             className="block px-3 py-2 rounded-md text-sm font-medium text-slate-700 hover:text-slate-900 hover:bg-slate-50"
           >
-            Mobile & Laptop Repairs
+            Repair Services
           </a>
           <a
             href="#display-catalog"
@@ -111,7 +124,7 @@ export const Navbar: React.FC = () => {
             onClick={() => setMobileMenuOpen(false)}
             className="block px-3 py-2 rounded-md text-sm font-medium text-slate-700 hover:text-slate-900 hover:bg-slate-50"
           >
-            Tech Accessories
+            Accessories
           </a>
           <a
             href="#standards"
@@ -129,11 +142,11 @@ export const Navbar: React.FC = () => {
           </a>
           <div className="pt-2">
             <a
-              href="#diagnostic-estimator"
+              href="#repairs"
               onClick={() => setMobileMenuOpen(false)}
               className="w-full inline-flex items-center justify-center gap-1.5 px-4 py-2.5 text-xs font-semibold text-white bg-orange-600 rounded-lg hover:bg-orange-500 transition-colors"
             >
-              <span>Instant Repair Cost Estimator</span>
+              <span>Explore Repair Services</span>
               <ArrowUpRight className="w-3.5 h-3.5" />
             </a>
           </div>
